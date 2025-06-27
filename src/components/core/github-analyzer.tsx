@@ -3,12 +3,12 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Search, Zap, Loader2 } from "lucide-react";
+import { Card, CardContent } from "@/components/ui/card";
+import { Github, Loader2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { generateProfileInsights } from "@/ai/flows/generate-profile-insights";
 import { generatePersonalizedTips } from "@/ai/flows/generate-personalized-tips";
-import type { AnalysisResult, Repo, GitHubUser } from "@/types";
+import type { AnalysisResult, Repo, GitHubUser, ContributionData } from "@/types";
 import { Dashboard } from "./dashboard";
 import { Skeleton } from "../ui/skeleton";
 
@@ -57,6 +57,29 @@ const createRepoSummary = (repos: Repo[]): string => {
     `.trim())
     .join('\n');
 }
+
+const generateContributionData = (): ContributionData[] => {
+    const data: ContributionData[] = [];
+    const today = new Date();
+    const startDate = new Date(new Date().setDate(today.getDate() - 365));
+
+    for (let d = new Date(startDate); d <= today; d.setDate(d.getDate() + 1)) {
+        const count = Math.floor(Math.random() * 25);
+        let level: 0 | 1 | 2 | 3 | 4;
+        if (count === 0) level = 0;
+        else if (count < 5) level = 1;
+        else if (count < 10) level = 2;
+        else if (count < 20) level = 3;
+        else level = 4;
+        
+        data.push({
+            date: d.toISOString().split('T')[0],
+            count,
+            level
+        });
+    }
+    return data;
+};
 
 
 export function GithubAnalyzer() {
@@ -109,7 +132,7 @@ export function GithubAnalyzer() {
 
       const tipsResult = await generatePersonalizedTips({
         profileAnalysis: insightsResult.insights,
-        userGoals: "Improve open source presence and collaboration skills.",
+        userGoals: "Improve open source presence, contribution consistency, and collaboration skills.",
       });
 
       setAnalysisResult({
@@ -118,8 +141,10 @@ export function GithubAnalyzer() {
         insights: insightsResult.insights,
         ratings: insightsResult.ratings,
         tips: tipsResult.tips,
+        contributionStrategies: tipsResult.contributionStrategies,
         languageData: processLanguageData(repos),
         commitActivity: generateCommitActivity(),
+        contributionData: generateContributionData(),
       });
       setUsername("");
 
@@ -136,23 +161,19 @@ export function GithubAnalyzer() {
   };
 
   return (
-    <section id="analyzer" className="container mx-auto max-w-3xl py-12 px-4 text-center">
+    <section id="analyzer" className="container mx-auto max-w-5xl py-12 px-4 text-center">
       <div className="mb-8">
-        <Zap className="mx-auto h-12 w-12 text-primary" />
+        <Github className="mx-auto h-16 w-16 text-foreground" />
         <h1 className="mt-4 text-4xl font-bold tracking-tight font-headline sm:text-5xl">
-          GitHub Profile Analyzer
+          AI GitHub Analyzer
         </h1>
         <p className="mt-4 text-lg text-muted-foreground">
           Enter a GitHub username to get a deep, AI-powered analysis of their profile and contributions.
         </p>
       </div>
 
-      <Card className="shadow-xl bg-card/80 backdrop-blur-sm">
-        <CardHeader>
-          <CardTitle>Analyze a Profile</CardTitle>
-          <CardDescription>No login required. Just enter a username and see the magic.</CardDescription>
-        </CardHeader>
-        <CardContent>
+      <Card className="shadow-lg bg-card/50 backdrop-blur-sm border-border">
+        <CardContent className="p-6">
           <form
             onSubmit={(e) => {
               e.preventDefault();
@@ -166,29 +187,29 @@ export function GithubAnalyzer() {
               value={username}
               onChange={(e) => setUsername(e.target.value)}
               disabled={loading}
-              className="flex-grow text-lg h-12"
+              className="flex-grow text-base h-11"
             />
-            <Button type="submit" disabled={loading} size="lg" className="h-12">
+            <Button type="submit" disabled={loading} size="lg" className="h-11 bg-primary/90 hover:bg-primary">
               {loading ? (
                 <Loader2 className="mr-2 h-5 w-5 animate-spin" />
               ) : (
-                <Search className="mr-2 h-5 w-5" />
+                <Github className="mr-2 h-5 w-5" />
               )}
-              Analyze
+              Analyze Profile
             </Button>
           </form>
         </CardContent>
       </Card>
       
       {loading && (
-        <div className="mt-8">
-            <div className="space-y-4">
-                <Skeleton className="h-48 w-full" />
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-                    <Skeleton className="h-64 w-full" />
-                    <Skeleton className="h-64 w-full" />
+        <div className="mt-8 space-y-6">
+            <div className="flex gap-8">
+                <Skeleton className="h-64 w-1/4 rounded-lg hidden lg:block" />
+                <div className="w-full lg:w-3/4 space-y-6">
+                    <Skeleton className="h-32 w-full rounded-lg" />
+                    <Skeleton className="h-48 w-full rounded-lg" />
+                     <Skeleton className="h-48 w-full rounded-lg" />
                 </div>
-                <Skeleton className="h-32 w-full" />
             </div>
         </div>
       )}

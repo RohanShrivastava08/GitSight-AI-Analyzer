@@ -31,12 +31,20 @@ export interface Rating {
   cons: string[];
 }
 
+export interface ContributionData {
+  date: string;
+  count: number;
+  level: 0 | 1 | 2 | 3 | 4;
+}
+
 export interface AnalysisResult {
   user: GitHubUser;
   repos: Repo[];
   insights: string;
   tips: string[];
+  contributionStrategies: string[];
   languageData: { name: string; value: number }[];
   commitActivity: { name: string; total: number }[];
   ratings: Rating[];
+  contributionData: ContributionData[];
 }
