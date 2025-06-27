@@ -3,8 +3,8 @@ import { ShieldCheck, DatabaseZap, Cpu } from "lucide-react";
 
 const faqs = [
   {
-    question: "Is my data stored when I use Git Insights?",
-    answer: "No, we respect your privacy. Git Insights does not store any of your data. All analysis is done in real-time and forgotten once you leave the page.",
+    question: "Is my data stored when I use GitSight?",
+    answer: "No, we respect your privacy. GitSight does not store any of your data. All analysis is done in real-time and forgotten once you leave the page.",
     icon: ShieldCheck,
   },
   {

@@ -40,7 +40,7 @@ export function Features() {
       <div className="container mx-auto max-w-6xl px-4">
         <div className="text-center mb-12">
           <h2 className="text-3xl font-bold tracking-tight font-headline sm:text-4xl">
-            Why You'll Love Git Insights
+            Why You'll Love GitSight
           </h2>
           <p className="mt-4 text-lg text-muted-foreground">
             A comprehensive toolkit to understand and improve any GitHub profile.

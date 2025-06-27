@@ -8,7 +8,8 @@ import { Github, Loader2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { generateProfileInsights } from "@/ai/flows/generate-profile-insights";
 import { generatePersonalizedTips } from "@/ai/flows/generate-personalized-tips";
-import type { AnalysisResult, Repo, GitHubUser } from "@/types";
+import { analyzePinnedRepos } from "@/ai/flows/analyze-pinned-repos";
+import type { AnalysisResult, Repo, GitHubUser, PinnedRepo } from "@/types";
 import { Dashboard } from "./dashboard";
 import { Skeleton } from "../ui/skeleton";
 import { DemoProfiles } from "../sections/demo-profiles";
@@ -82,6 +83,7 @@ export function GithubAnalyzer() {
     try {
       const userRes = await fetch(`https://api.github.com/users/${userToAnalyze}`);
       const repoRes = await fetch(`https://api.github.com/users/${userToAnalyze}/repos?sort=pushed&per_page=100`);
+      const pinnedRepoRes = await fetch(`/api/github-pinned-repos?username=${userToAnalyze}`);
 
       if (userRes.status === 404) {
         toast({
@@ -93,19 +95,25 @@ export function GithubAnalyzer() {
         return;
       }
 
-      if (!userRes.ok || !repoRes.ok) {
+      if (!userRes.ok || !repoRes.ok || !pinnedRepoRes.ok) {
         throw new Error('Failed to fetch data from GitHub.');
       }
 
       const user = await userRes.json();
       const repos: Repo[] = await repoRes.json();
+      const pinnedRepos: PinnedRepo[] = await pinnedRepoRes.json();
       
-      // Call Genkit AI flows
-      const insightsResult = await generateProfileInsights({
+      const insightsPromise = generateProfileInsights({
         username: user.login,
         profileSummary: createProfileSummary(user),
         repoSummary: createRepoSummary(repos),
       });
+
+      const pinnedRepoAnalysisPromise = pinnedRepos.length > 0 
+        ? analyzePinnedRepos(pinnedRepos.map(r => ({ name: r.name, description: r.description })))
+        : Promise.resolve([]);
+
+      const [insightsResult, pinnedRepoAnalysis] = await Promise.all([insightsPromise, pinnedRepoAnalysisPromise]);
 
       const tipsResult = await generatePersonalizedTips({
         profileAnalysis: insightsResult.insights.join("\n- "),
@@ -115,12 +123,14 @@ export function GithubAnalyzer() {
       setAnalysisResult({
         user,
         repos,
+        pinnedRepos,
         insights: insightsResult.insights,
         ratings: insightsResult.ratings,
         tips: tipsResult.tips,
         contributionStrategies: tipsResult.contributionStrategies,
         languageData: processLanguageData(repos),
         commitActivity: generateCommitActivity(),
+        pinnedRepoAnalysis,
       });
 
     } catch (error) {

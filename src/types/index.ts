@@ -24,6 +24,25 @@ export interface Repo {
   html_url: string;
 }
 
+export interface PinnedRepo {
+  name: string;
+  description: string | null;
+  url: string;
+  stargazers: number;
+  forks: number;
+  primaryLanguage: {
+    name: string;
+    color: string;
+  } | null;
+}
+
+export interface RepoAnalysis {
+  repoName: string;
+  review: string;
+  suggestions: string[];
+}
+
+
 export interface Rating {
   category: string;
   score: number;
@@ -40,10 +59,12 @@ export interface ContributionData {
 export interface AnalysisResult {
   user: GitHubUser;
   repos: Repo[];
+  pinnedRepos: PinnedRepo[];
   insights: string[];
   tips: string[];
   contributionStrategies: string[];
   languageData: { name: string; value: number }[];
   commitActivity: { name: string; total: number }[];
   ratings: Rating[];
+  pinnedRepoAnalysis: RepoAnalysis[];
 }

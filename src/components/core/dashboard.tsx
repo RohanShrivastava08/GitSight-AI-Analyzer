@@ -1,13 +1,13 @@
 
 "use client";
 
-import type { AnalysisResult, ContributionData } from "@/types";
+import type { AnalysisResult } from "@/types";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { ContributionGraph } from "./contribution-graph";
-import { Users, Building, MapPin, Link as LinkIcon, CheckCircle, XCircle, TrendingUp, BrainCircuit, GitBranch, ChevronsRight, Lightbulb, Code, GitCommit, AlertTriangle } from "lucide-react";
+import { Users, Building, MapPin, Link as LinkIcon, CheckCircle, XCircle, TrendingUp, BrainCircuit, GitBranch, ChevronsRight, Lightbulb, Code, GitCommit, AlertTriangle, MessageSquareQuote } from "lucide-react";
 import { Area, AreaChart, Bar, BarChart as BarChartRecharts, CartesianGrid, XAxis, YAxis } from "recharts";
 import type { ChartConfig } from "@/components/ui/chart";
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
@@ -15,6 +15,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { useEffect, useState } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { Skeleton } from "../ui/skeleton";
+import { PinnedRepos } from "./pinned-repos";
 
 const languageChartConfig = {
   value: {
@@ -36,7 +37,7 @@ function ContributionActivity({ username, created_at }: { username: string, crea
     const years = Array.from({ length: currentYear - joinYear + 1 }, (_, i) => currentYear - i);
 
     const [selectedYear, setSelectedYear] = useState(currentYear);
-    const [contributionData, setContributionData] = useState<ContributionData[]>([]);
+    const [contributionData, setContributionData] = useState<any[]>([]);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
     const { toast } = useToast();
@@ -257,6 +258,13 @@ export function Dashboard({ result }: { result: AnalysisResult }) {
                   </CardContent>
               </Card>
           </div>
+          
+          {result.pinnedRepos.length > 0 && (
+            <PinnedRepos 
+                repos={result.pinnedRepos} 
+                analysis={result.pinnedRepoAnalysis} 
+            />
+           )}
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
             <Card className="shadow-lg bg-card/50 backdrop-blur-xl">

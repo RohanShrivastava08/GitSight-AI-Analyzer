@@ -7,7 +7,7 @@ export function Header() {
       <div className="container h-16 flex items-center justify-between max-w-7xl mx-auto px-4">
         <a href="/" className="flex items-center gap-3">
           <Github className="h-8 w-8 text-foreground" />
-          <span className="font-semibold text-lg font-headline hidden sm:inline-block">Git Insights</span>
+          <span className="font-semibold text-lg font-headline hidden sm:inline-block">GitSight</span>
         </a>
         <div className="flex items-center gap-2">
             <ThemeToggle />

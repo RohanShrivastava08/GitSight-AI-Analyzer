@@ -5,7 +5,7 @@ const testimonials = [
   {
     name: "Alex Johnson",
     title: "Senior Developer",
-    quote: "Git Insights gave me a completely new perspective on my contributions. The AI tips were spot-on and genuinely helpful for my career growth.",
+    quote: "GitSight gave me a completely new perspective on my contributions. The AI tips were spot-on and genuinely helpful for my career growth.",
     avatar: "https://placehold.co/40x40.png",
     handle: "alex_j"
   },
@@ -34,7 +34,7 @@ export function Testimonials() {
             Loved by Developers and Managers
           </h2>
           <p className="mt-4 text-lg text-muted-foreground">
-            See what others are saying about Git Insights.
+            See what others are saying about GitSight.
           </p>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
