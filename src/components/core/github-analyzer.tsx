@@ -59,30 +59,6 @@ const createRepoSummary = (repos: Repo[]): string => {
     .join('\n');
 }
 
-const generateContributionData = (): ContributionData[] => {
-    const data: ContributionData[] = [];
-    const today = new Date();
-    const startDate = new Date(new Date().setDate(today.getDate() - 365));
-
-    for (let d = new Date(startDate); d <= today; d.setDate(d.getDate() + 1)) {
-        const count = Math.floor(Math.random() * 25);
-        let level: 0 | 1 | 2 | 3 | 4;
-        if (count === 0) level = 0;
-        else if (count < 5) level = 1;
-        else if (count < 10) level = 2;
-        else if (count < 20) level = 3;
-        else level = 4;
-        
-        data.push({
-            date: d.toISOString().split('T')[0],
-            count,
-            level
-        });
-    }
-    return data;
-};
-
-
 export function GithubAnalyzer() {
   const [username, setUsername] = useState("");
   const [loading, setLoading] = useState(false);
@@ -123,7 +99,9 @@ export function GithubAnalyzer() {
 
       const user = await userRes.json();
       const repos: Repo[] = await repoRes.json();
-
+      
+      const contributionRes = await fetch(`/api/github-contributions?username=${userToAnalyze}`);
+      const contributionData: ContributionData[] = contributionRes.ok ? await contributionRes.json() : [];
 
       // Call Genkit AI flows
       const insightsResult = await generateProfileInsights({
@@ -146,7 +124,7 @@ export function GithubAnalyzer() {
         contributionStrategies: tipsResult.contributionStrategies,
         languageData: processLanguageData(repos),
         commitActivity: generateCommitActivity(),
-        contributionData: generateContributionData(),
+        contributionData,
       });
 
     } catch (error) {
