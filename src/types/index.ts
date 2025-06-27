@@ -17,7 +17,7 @@ export interface GitHubUser {
 
 export interface Repo {
   name: string;
-  language: string;
+  language: string | null;
   stargazers_count: number;
 }
 

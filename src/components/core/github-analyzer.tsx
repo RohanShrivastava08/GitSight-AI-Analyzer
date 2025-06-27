@@ -8,42 +8,14 @@ import { Search, Zap, Loader2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { generateProfileInsights } from "@/ai/flows/generate-profile-insights";
 import { generatePersonalizedTips } from "@/ai/flows/generate-personalized-tips";
-import type { AnalysisResult } from "@/types";
+import type { AnalysisResult, Repo } from "@/types";
 import { Dashboard } from "./dashboard";
 import { Skeleton } from "../ui/skeleton";
-
-// Mocks for demonstration as we can't fetch live data in this environment.
-const mockUser = {
-    login: 'demouser',
-    avatar_url: 'https://placehold.co/100x100.png',
-    html_url: '#',
-    name: 'Demo User',
-    company: 'Demo Corp',
-    blog: '',
-    location: 'Internet',
-    email: null,
-    bio: 'This is a mock GitHub user profile for demonstration purposes. The data is not real but showcases the structure of the analysis.',
-    public_repos: 42,
-    public_gists: 15,
-    followers: 1200,
-    following: 35,
-    created_at: '2020-01-15T13:45:30Z',
-};
-
-const mockRepos = [
-    { name: "project-phoenix", language: "TypeScript", stargazers_count: 150 },
-    { name: "awesome-ai-list", language: "JavaScript", stargazers_count: 300 },
-    { name: "dotfiles", language: "Shell", stargazers_count: 50 },
-    { name: "react-component-library", language: "TypeScript", stargazers_count: 200 },
-    { name: "portfolio-website", language: "JavaScript", stargazers_count: 75 },
-    { name: "data-analysis-notebooks", language: "Python", stargazers_count: 120 },
-    { name: "another-project", language: "Python", stargazers_count: 10 },
-];
 
 const mockCommitHistory = `Commits in last 6 months: 350. Active on weekdays, less on weekends. Peak activity in the afternoon.`;
 const mockContributionDetails = `Contributed to 5 public repositories. Opened 20 issues and 15 pull requests. Most contributions are in TypeScript and Python projects.`;
 
-const processLanguageData = (repos: typeof mockRepos) => {
+const processLanguageData = (repos: Repo[]) => {
     const langCount = repos.reduce((acc, repo) => {
         if (repo.language) {
             acc[repo.language] = (acc[repo.language] || 0) + 1;
@@ -84,10 +56,26 @@ export function GithubAnalyzer() {
     setAnalysisResult(null);
 
     try {
-      // In a real app, you would fetch from GitHub API here.
-      // We will use mock data for this demonstration.
-      const user = { ...mockUser, login: userToAnalyze, name: userToAnalyze.charAt(0).toUpperCase() + userToAnalyze.slice(1) };
-      const repos = mockRepos;
+      const userRes = await fetch(`https://api.github.com/users/${userToAnalyze}`);
+      const repoRes = await fetch(`https://api.github.com/users/${userToAnalyze}/repos?sort=updated&per_page=100`);
+
+      if (userRes.status === 404) {
+        toast({
+            title: "User not found",
+            description: `Could not find a GitHub user with the username "${userToAnalyze}".`,
+            variant: "destructive",
+        });
+        setLoading(false);
+        return;
+      }
+
+      if (!userRes.ok || !repoRes.ok) {
+        throw new Error('Failed to fetch data from GitHub.');
+      }
+
+      const user = await userRes.json();
+      const repos: Repo[] = await repoRes.json();
+
 
       // Call Genkit AI flows
       const insightsResult = await generateProfileInsights({
@@ -115,7 +103,7 @@ export function GithubAnalyzer() {
       console.error("Analysis failed:", error);
       toast({
         title: "Analysis Failed",
-        description: "Could not analyze the profile. The AI model might be busy. Please try again later.",
+        description: error instanceof Error ? error.message : "An unexpected error occurred. Please try again later.",
         variant: "destructive",
       });
     } finally {
