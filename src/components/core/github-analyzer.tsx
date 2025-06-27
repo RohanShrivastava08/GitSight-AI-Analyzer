@@ -133,7 +133,7 @@ export function GithubAnalyzer() {
       });
 
       const tipsResult = await generatePersonalizedTips({
-        profileAnalysis: insightsResult.insights,
+        profileAnalysis: insightsResult.insights.join("\n- "),
         userGoals: "Improve open source presence, contribution consistency, and collaboration skills.",
       });
 
