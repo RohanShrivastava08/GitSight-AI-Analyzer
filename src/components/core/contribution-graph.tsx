@@ -1,3 +1,4 @@
+
 "use client";
 
 import type { ContributionData } from "@/types";
@@ -25,7 +26,7 @@ export function ContributionGraph({ data, year }: { data: ContributionData[], ye
     return contributionsMap.get(dateString) || { date: dateString, count: 0, level: 0 };
   });
 
-  const firstDayOffset = yearStartDate.getUTCDay();
+  const firstDayOffset = new Date(year, 0, 1).getUTCDay();
 
   const monthLabels = days
     .map((day, index) => ({ day, index }))

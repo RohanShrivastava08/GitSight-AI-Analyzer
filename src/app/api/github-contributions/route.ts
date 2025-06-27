@@ -1,3 +1,4 @@
+
 import { NextResponse } from 'next/server';
 import type { ContributionData } from '@/types';
 
@@ -62,7 +63,7 @@ export async function GET(request: Request) {
         }
       }
     `,
-    variables: { username, from, to },
+    variables: { username, from: from.toISOString(), to: to.toISOString() },
   };
 
   try {
