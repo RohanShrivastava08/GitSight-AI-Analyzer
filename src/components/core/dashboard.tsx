@@ -113,12 +113,12 @@ export function Dashboard({ result }: { result: AnalysisResult }) {
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
         {/* Left Sidebar */}
         <div className="lg:col-span-1 space-y-6">
-          <div className="flex flex-col items-center lg:items-start animate-fade-in" style={{animationDelay: '0ms', animationFillMode: 'both'}}>
+          <div className="flex flex-col items-center animate-fade-in" style={{animationDelay: '0ms', animationFillMode: 'both'}}>
             <Avatar className="h-40 w-40 border-4 border-border shadow-lg">
               <AvatarImage src={result.user.avatar_url} alt={result.user.name} />
               <AvatarFallback>{result.user.name ? result.user.name.charAt(0) : result.user.login.charAt(0)}</AvatarFallback>
             </Avatar>
-            <div className="mt-4 text-center lg:text-left">
+            <div className="mt-4 text-center">
               <h1 className="text-xl font-bold font-headline">{result.user.name}</h1>
               <a href={result.user.html_url} target="_blank" rel="noopener noreferrer" className="text-lg text-muted-foreground hover:text-primary">
                 @{result.user.login}
