@@ -13,7 +13,6 @@ import { analyzePinnedRepos } from "@/ai/flows/analyze-pinned-repos";
 import type { AnalysisResult, Repo, GitHubUser, PinnedRepo } from "@/types";
 import { Dashboard } from "./dashboard";
 import { Skeleton } from "../ui/skeleton";
-import { DemoProfiles } from "../sections/demo-profiles";
 
 const processLanguageData = (repos: Repo[]) => {
     const langCount = repos.reduce((acc, repo) => {
@@ -170,7 +169,7 @@ export function GithubAnalyzer() {
             >
               <Input
                 type="text"
-                placeholder="e.g., torvalds"
+                placeholder="Enter Your Github Username"
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
                 disabled={loading}
@@ -188,10 +187,6 @@ export function GithubAnalyzer() {
           </CardContent>
         </Card>
       </section>
-      
-      {!loading && !analysisResult && (
-        <DemoProfiles onAnalyze={handleAnalyze} loading={loading} />
-      )}
       
       {loading && (
         <div className="container mx-auto max-w-7xl p-4 sm:p-6 lg:p-8 mt-6">
