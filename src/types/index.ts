@@ -40,7 +40,7 @@ export interface ContributionData {
 export interface AnalysisResult {
   user: GitHubUser;
   repos: Repo[];
-  insights: string;
+  insights: string[];
   tips: string[];
   contributionStrategies: string[];
   languageData: { name: string; value: number }[];

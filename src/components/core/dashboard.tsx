@@ -6,7 +6,26 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { ContributionGraph } from "./contribution-graph";
-import { Users, Building, MapPin, Link as LinkIcon, CheckCircle, XCircle, TrendingUp, BrainCircuit, GitBranch, ChevronsRight, Lightbulb } from "lucide-react";
+import { Users, Building, MapPin, Link as LinkIcon, CheckCircle, XCircle, TrendingUp, BrainCircuit, GitBranch, ChevronsRight, Lightbulb, BarChart, GitCommit, Code } from "lucide-react";
+import { Area, AreaChart, Bar, BarChart as BarChartRecharts, CartesianGrid, XAxis, YAxis } from "recharts";
+import type { ChartConfig } from "@/components/ui/chart";
+import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
+
+
+const languageChartConfig = {
+  value: {
+    label: "Repositories",
+    color: "hsl(var(--chart-1))",
+  },
+} satisfies ChartConfig
+
+const commitChartConfig = {
+  total: {
+    label: "Commits",
+    color: "hsl(var(--chart-1))",
+  },
+} satisfies ChartConfig
+
 
 export function Dashboard({ result }: { result: AnalysisResult }) {
   return (
@@ -48,14 +67,21 @@ export function Dashboard({ result }: { result: AnalysisResult }) {
               <CardTitle className="flex items-center gap-2 font-headline text-xl"><BrainCircuit className="text-primary"/> AI-Powered Insights</CardTitle>
             </CardHeader>
             <CardContent>
-              <p className="text-base text-foreground/90 whitespace-pre-wrap leading-relaxed">{result.insights}</p>
+              <ul className="space-y-3">
+                {result.insights.map((insight, index) => (
+                  <li key={index} className="flex items-start gap-3 text-base text-foreground/90 leading-relaxed">
+                     <CheckCircle className="w-5 h-5 mt-1 text-primary flex-shrink-0" />
+                     <span>{insight}</span>
+                  </li>
+                ))}
+              </ul>
             </CardContent>
           </Card>
           
           <Card className="shadow-lg bg-card/50 backdrop-blur-xl border-border">
             <CardHeader>
                 <CardTitle className="font-headline flex items-center gap-2 text-xl"><GitBranch className="text-primary"/> Contribution Activity</CardTitle>
-                <CardDescription>Contribution activity over the last year.</CardDescription>
+                <CardDescription>A summary of contribution activity over the last year.</CardDescription>
             </CardHeader>
             <CardContent>
                 <ContributionGraph data={result.contributionData} />
@@ -93,6 +119,72 @@ export function Dashboard({ result }: { result: AnalysisResult }) {
                 </Card>
               ))}
             </div>
+          </div>
+          
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+             <Card className="shadow-lg bg-card/50 backdrop-blur-xl">
+                <CardHeader>
+                  <CardTitle className="font-headline flex items-center gap-2 text-xl"><Code className="text-primary"/> Language Distribution</CardTitle>
+                  <CardDescription>Top languages used in public repositories.</CardDescription>
+                </CardHeader>
+                <CardContent>
+                    <ChartContainer config={languageChartConfig} className="min-h-[250px] w-full">
+                      <BarChartRecharts accessibilityLayer data={result.languageData} layout="vertical" margin={{ left: 10 }}>
+                        <YAxis
+                          dataKey="name"
+                          type="category"
+                          tickLine={false}
+                          tickMargin={10}
+                          axisLine={false}
+                          className="text-xs"
+                          interval={0}
+                        />
+                        <XAxis dataKey="value" type="number" hide />
+                        <CartesianGrid horizontal={false} />
+                        <ChartTooltip
+                          cursor={false}
+                          content={<ChartTooltipContent indicator="dot" />}
+                        />
+                        <Bar dataKey="value" fill="var(--color-value)" radius={4} />
+                      </BarChartRecharts>
+                    </ChartContainer>
+                </CardContent>
+              </Card>
+
+              <Card className="shadow-lg bg-card/50 backdrop-blur-xl">
+                  <CardHeader>
+                    <CardTitle className="font-headline flex items-center gap-2 text-xl"><GitCommit className="text-primary"/> Commit Activity</CardTitle>
+                    <CardDescription>Total commits in the last 6 months.</CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <ChartContainer config={commitChartConfig} className="min-h-[250px] w-full">
+                      <AreaChart
+                        accessibilityLayer
+                        data={result.commitActivity}
+                        margin={{ left: 12, right: 12 }}
+                      >
+                        <CartesianGrid vertical={false} />
+                        <XAxis
+                          dataKey="name"
+                          tickLine={false}
+                          axisLine={false}
+                          tickMargin={8}
+                        />
+                        <ChartTooltip
+                          cursor={false}
+                          content={<ChartTooltipContent indicator="dot" />}
+                        />
+                        <Area
+                          dataKey="total"
+                          type="natural"
+                          fill="var(--color-total)"
+                          fillOpacity={0.4}
+                          stroke="var(--color-total)"
+                        />
+                      </AreaChart>
+                  </ChartContainer>
+                  </CardContent>
+              </Card>
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">

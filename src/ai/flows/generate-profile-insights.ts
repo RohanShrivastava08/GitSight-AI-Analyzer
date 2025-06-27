@@ -21,7 +21,7 @@ const GenerateProfileInsightsInputSchema = z.object({
   repoSummary: z
     .string()
     .describe(
-      'A summary of the user\'s most popular repositories, including names, descriptions, languages, and star counts.'
+      "A summary of the user's most popular repositories, including names, descriptions, languages, and star counts."
     ),
 });
 
@@ -31,8 +31,10 @@ export type GenerateProfileInsightsInput = z.infer<
 
 const GenerateProfileInsightsOutputSchema = z.object({
   insights: z
-    .string()
-    .describe('AI-generated insights about the GitHub profile.'),
+    .array(z.string())
+    .describe(
+      'A list of 3-5 key, actionable insights about the GitHub profile, formatted as individual points.'
+    ),
   ratings: z
     .array(
       z.object({
@@ -80,7 +82,7 @@ const profileInsightsPrompt = ai.definePrompt({
   - Repository Summary: {{{repoSummary}}}
 
   **Instructions:**
-  1.  **Generate Insights:** Based on all the provided information, write a concise, insightful paragraph (3-4 sentences) summarizing the user's strengths, potential areas for growth, and overall impression. Focus on their public presence and development habits.
+  1.  **Generate Insights:** Based on all the provided information, write a list of 3-5 concise, insightful bullet points summarizing the user's strengths, potential areas for growth, and overall impression. Each point should be a separate string in the array. Focus on their public presence and development habits.
   2.  **Generate Ratings:** Rate the user on a scale of 0 to 10 in the following categories. For each category, provide 1-2 "pros" (things they are doing well) and 1-2 "cons" (areas for improvement).
 
       *   **Profile Completeness:** How well-filled is their profile? (Name, bio, photo, location, links). A good bio and links are key.
