@@ -3,25 +3,25 @@ import { Card, CardContent } from "@/components/ui/card";
 
 const testimonials = [
   {
-    name: "Alex Johnson",
+    name: "Rohan Sharma",
     title: "Senior Developer",
     quote: "GitSight gave me a completely new perspective on my contributions. The AI tips were spot-on and genuinely helpful for my career growth.",
-    avatar: "https://placehold.co/40x40.png",
-    handle: "alex_j"
+    avatar: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8cGVvcGxlJTIwZmFjZXxlbnwwfHwwfHx8MA%3D%3D",
+    handle: "rohan_s"
   },
   {
-    name: "Samantha Lee",
+    name: "Priya Patel",
     title: "Engineering Manager",
     quote: "I use this tool to understand the strengths of my team members. The dashboard is intuitive and saves me hours of manual profile reviews.",
-    avatar: "https://placehold.co/40x40.png",
-    handle: "samantha_l"
+    avatar: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTR8fHBlb3BsZSUyMGZhY2V8ZW58MHx8MHx8fDA%3D",
+    handle: "priya_p"
   },
   {
-    name: "David Chen",
+    name: "Vikram Singh",
     title: "Open Source Contributor",
     quote: "The best no-login GitHub analyzer I've come across. It's fast, beautifully designed, and the export feature is a huge plus for sharing my profile summary.",
-    avatar: "https://placehold.co/40x40.png",
-    handle: "david_c"
+    avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8N3x8cGVvcGxlJTIwZmFjZXxlbnwwfHwwfHx8MA%3D%3D",
+    handle: "vikram_s"
   },
 ];
 
@@ -39,12 +39,12 @@ export function Testimonials() {
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {testimonials.map((testimonial, index) => (
-            <Card key={index} className="bg-background shadow-lg">
+            <Card key={index} className="bg-background shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
               <CardContent className="pt-6">
                 <blockquote className="text-lg text-foreground/90">"{testimonial.quote}"</blockquote>
                 <div className="mt-4 flex items-center">
                   <Avatar>
-                    <AvatarImage data-ai-hint="person" src={testimonial.avatar} alt={testimonial.name} />
+                    <AvatarImage src={testimonial.avatar} alt={testimonial.name} />
                     <AvatarFallback>{testimonial.name.charAt(0)}</AvatarFallback>
                   </Avatar>
                   <div className="ml-4">
