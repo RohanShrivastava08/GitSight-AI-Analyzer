@@ -11,6 +11,7 @@ import { generatePersonalizedTips } from "@/ai/flows/generate-personalized-tips"
 import type { AnalysisResult, Repo, GitHubUser, ContributionData } from "@/types";
 import { Dashboard } from "./dashboard";
 import { Skeleton } from "../ui/skeleton";
+import { DemoProfiles } from "../sections/demo-profiles";
 
 const processLanguageData = (repos: Repo[]) => {
     const langCount = repos.reduce((acc, repo) => {
@@ -100,6 +101,7 @@ export function GithubAnalyzer() {
 
     setLoading(true);
     setAnalysisResult(null);
+    setUsername("");
 
     try {
       const userRes = await fetch(`https://api.github.com/users/${userToAnalyze}`);
@@ -146,7 +148,6 @@ export function GithubAnalyzer() {
         commitActivity: generateCommitActivity(),
         contributionData: generateContributionData(),
       });
-      setUsername("");
 
     } catch (error) {
       console.error("Analysis failed:", error);
@@ -161,60 +162,73 @@ export function GithubAnalyzer() {
   };
 
   return (
-    <section id="analyzer" className="container mx-auto max-w-5xl py-12 px-4 text-center">
-      <div className="mb-8">
-        <Github className="mx-auto h-16 w-16 text-foreground" />
-        <h1 className="mt-4 text-4xl font-bold tracking-tight font-headline sm:text-5xl">
-          AI GitHub Analyzer
-        </h1>
-        <p className="mt-4 text-lg text-muted-foreground">
-          Enter a GitHub username to get a deep, AI-powered analysis of their profile and contributions.
-        </p>
-      </div>
+    <>
+      <section id="analyzer" className="container mx-auto max-w-5xl py-12 px-4 text-center">
+        <div className="mb-8">
+          <Github className="mx-auto h-16 w-16 text-foreground" />
+          <h1 className="mt-4 text-4xl font-bold tracking-tight font-headline sm:text-5xl">
+            AI GitHub Analyzer
+          </h1>
+          <p className="mt-4 text-lg text-muted-foreground">
+            Enter a GitHub username to get a deep, AI-powered analysis of their profile and contributions.
+          </p>
+        </div>
 
-      <Card className="shadow-lg bg-card/50 backdrop-blur-sm border-border">
-        <CardContent className="p-6">
-          <form
-            onSubmit={(e) => {
-              e.preventDefault();
-              handleAnalyze(username);
-            }}
-            className="flex flex-col sm:flex-row gap-4"
-          >
-            <Input
-              type="text"
-              placeholder="e.g., torvalds"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-              disabled={loading}
-              className="flex-grow text-base h-11"
-            />
-            <Button type="submit" disabled={loading} size="lg" className="h-11 bg-primary/90 hover:bg-primary">
-              {loading ? (
-                <Loader2 className="mr-2 h-5 w-5 animate-spin" />
-              ) : (
-                <Github className="mr-2 h-5 w-5" />
-              )}
-              Analyze Profile
-            </Button>
-          </form>
-        </CardContent>
-      </Card>
+        <Card className="shadow-lg bg-card/50 backdrop-blur-sm border-border">
+          <CardContent className="p-6">
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                handleAnalyze(username);
+              }}
+              className="flex flex-col sm:flex-row gap-4"
+            >
+              <Input
+                type="text"
+                placeholder="e.g., torvalds"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+                disabled={loading}
+                className="flex-grow text-base h-11"
+              />
+              <Button type="submit" disabled={loading} size="lg" className="h-11 bg-primary/90 hover:bg-primary">
+                {loading ? (
+                  <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+                ) : (
+                  <Github className="mr-2 h-5 w-5" />
+                )}
+                Analyze Profile
+              </Button>
+            </form>
+          </CardContent>
+        </Card>
+      </section>
+      
+      {!loading && !analysisResult && (
+        <DemoProfiles onAnalyze={handleAnalyze} loading={loading} />
+      )}
       
       {loading && (
-        <div className="mt-8 space-y-6">
-            <div className="flex gap-8">
-                <Skeleton className="h-64 w-1/4 rounded-lg hidden lg:block" />
-                <div className="w-full lg:w-3/4 space-y-6">
-                    <Skeleton className="h-32 w-full rounded-lg" />
-                    <Skeleton className="h-48 w-full rounded-lg" />
-                     <Skeleton className="h-48 w-full rounded-lg" />
+        <div className="container mx-auto max-w-7xl p-4 sm:p-6 lg:p-8 mt-6">
+            <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
+                <div className="lg:col-span-1 space-y-6 flex flex-col items-center lg:items-start">
+                  <Skeleton className="h-40 w-40 rounded-full" />
+                  <div className="space-y-3 w-full">
+                    <Skeleton className="h-8 w-3/4" />
+                    <Skeleton className="h-6 w-1/2" />
+                    <Skeleton className="h-12 w-full" />
+                  </div>
+                </div>
+                <div className="lg:col-span-3 space-y-8">
+                    <Skeleton className="h-24 w-full rounded-lg" />
+                    <Skeleton className="h-40 w-full rounded-lg" />
+                    <Skeleton className="h-40 w-full rounded-lg" />
                 </div>
             </div>
         </div>
       )}
       
       {analysisResult && !loading && <Dashboard result={analysisResult} />}
-    </section>
+    </>
   );
 }

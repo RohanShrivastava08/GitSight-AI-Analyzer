@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { ContributionGraph } from "./contribution-graph";
-import { Users, Building, MapPin, Link as LinkIcon, CheckCircle, XCircle, TrendingUp, BrainCircuit, GitBranch, ChevronsRight } from "lucide-react";
+import { Users, Building, MapPin, Link as LinkIcon, CheckCircle, XCircle, TrendingUp, BrainCircuit, GitBranch, ChevronsRight, Lightbulb } from "lucide-react";
 
 export function Dashboard({ result }: { result: AnalysisResult }) {
   return (
@@ -15,16 +15,16 @@ export function Dashboard({ result }: { result: AnalysisResult }) {
         {/* Left Sidebar */}
         <div className="lg:col-span-1 space-y-6">
           <div className="flex flex-col items-center lg:items-start">
-            <Avatar className="h-48 w-48 border-4 border-border shadow-lg">
+            <Avatar className="h-40 w-40 border-4 border-border shadow-lg">
               <AvatarImage src={result.user.avatar_url} alt={result.user.name} />
-              <AvatarFallback>{result.user.name.charAt(0)}</AvatarFallback>
+              <AvatarFallback>{result.user.name ? result.user.name.charAt(0) : result.user.login.charAt(0)}</AvatarFallback>
             </Avatar>
             <div className="mt-4 text-center lg:text-left">
-              <h1 className="text-2xl font-bold font-headline">{result.user.name}</h1>
-              <a href={result.user.html_url} target="_blank" rel="noopener noreferrer" className="text-xl text-muted-foreground hover:text-primary">
+              <h1 className="text-xl font-bold font-headline">{result.user.name}</h1>
+              <a href={result.user.html_url} target="_blank" rel="noopener noreferrer" className="text-lg text-muted-foreground hover:text-primary">
                 @{result.user.login}
               </a>
-              <p className="mt-2 text-foreground/80">{result.user.bio}</p>
+              <p className="mt-2 text-foreground/80 text-sm">{result.user.bio}</p>
             </div>
             <Button asChild className="mt-4 w-full">
                 <a href={result.user.html_url} target="_blank" rel="noopener noreferrer">View on GitHub</a>
@@ -54,8 +54,8 @@ export function Dashboard({ result }: { result: AnalysisResult }) {
           
           <Card className="shadow-lg bg-card/50 backdrop-blur-xl border-border">
             <CardHeader>
-                <CardTitle className="font-headline flex items-center gap-2 text-xl"><GitBranch className="text-primary"/> Yearly Contributions</CardTitle>
-                <CardDescription>Mock contribution activity for the last year.</CardDescription>
+                <CardTitle className="font-headline flex items-center gap-2 text-xl"><GitBranch className="text-primary"/> Contribution Activity</CardTitle>
+                <CardDescription>Contribution activity over the last year.</CardDescription>
             </CardHeader>
             <CardContent>
                 <ContributionGraph data={result.contributionData} />
@@ -98,7 +98,7 @@ export function Dashboard({ result }: { result: AnalysisResult }) {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
             <Card className="shadow-lg bg-card/50 backdrop-blur-xl">
               <CardHeader>
-                <CardTitle className="font-headline flex items-center gap-2 text-xl"><ChevronsRight className="text-primary"/> Personalized Tips</CardTitle>
+                <CardTitle className="font-headline flex items-center gap-2 text-xl"><Lightbulb className="text-primary"/> Personalized Tips</CardTitle>
                 <CardDescription>Actionable advice to improve this profile.</CardDescription>
               </CardHeader>
               <CardContent>
