@@ -21,7 +21,7 @@ export function DemoAnalysis() {
                         {/* Left Sidebar */}
                         <div className="lg:col-span-1 space-y-4 flex flex-col items-center lg:items-start text-center lg:text-left">
                              <Avatar className="h-32 w-32 border-4 border-border shadow-lg">
-                                <AvatarImage src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=900&auto=format&fit=crop&q=60" data-ai-hint="man portrait" alt="Rohan Shrivastava" />
+                                <AvatarImage src="https://avatars.githubusercontent.com/u/94133270?v=4" alt="Rohan Shrivastava" />
                                 <AvatarFallback>RS</AvatarFallback>
                             </Avatar>
                             <div>
