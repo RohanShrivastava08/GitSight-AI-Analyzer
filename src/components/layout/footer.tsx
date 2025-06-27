@@ -10,13 +10,16 @@ export function Footer() {
         <p className="text-sm text-muted-foreground order-first sm:order-none">
           <span className="font-semibold text-foreground">GitSight</span> &mdash; AI-Powered GitHub Analysis
         </p>
-        <div className="flex gap-5">
-            <a href="https://github.com/RohanShrivastava08" target="_blank" rel="noopener noreferrer" aria-label="Rohan's GitHub" className="text-muted-foreground hover:text-primary transition-colors">
-              <Github className="h-5 w-5" />
-            </a>
-            <a href="https://www.linkedin.com/in/rohan-shrivastava-887a15251/" target="_blank" rel="noopener noreferrer" aria-label="Rohan's LinkedIn" className="text-muted-foreground hover:text-primary transition-colors">
-              <Linkedin className="h-5 w-5" />
-            </a>
+        <div className="flex items-center gap-4">
+            <span className="text-sm text-muted-foreground">Connect with Me:</span>
+            <div className="flex gap-3">
+                <a href="https://github.com/RohanShrivastava08" target="_blank" rel="noopener noreferrer" aria-label="Rohan's GitHub" className="text-muted-foreground hover:text-primary transition-colors">
+                <Github className="h-5 w-5" />
+                </a>
+                <a href="https://www.linkedin.com/in/rohan-shrivastava-887a15251/" target="_blank" rel="noopener noreferrer" aria-label="Rohan's LinkedIn" className="text-muted-foreground hover:text-primary transition-colors">
+                <Linkedin className="h-5 w-5" />
+                </a>
+            </div>
         </div>
       </div>
     </footer>
