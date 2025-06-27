@@ -8,12 +8,9 @@ import { Search, Zap, Loader2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { generateProfileInsights } from "@/ai/flows/generate-profile-insights";
 import { generatePersonalizedTips } from "@/ai/flows/generate-personalized-tips";
-import type { AnalysisResult, Repo } from "@/types";
+import type { AnalysisResult, Repo, GitHubUser } from "@/types";
 import { Dashboard } from "./dashboard";
 import { Skeleton } from "../ui/skeleton";
-
-const mockCommitHistory = `Commits in last 6 months: 350. Active on weekdays, less on weekends. Peak activity in the afternoon.`;
-const mockContributionDetails = `Contributed to 5 public repositories. Opened 20 issues and 15 pull requests. Most contributions are in TypeScript and Python projects.`;
 
 const processLanguageData = (repos: Repo[]) => {
     const langCount = repos.reduce((acc, repo) => {
@@ -36,6 +33,32 @@ const generateCommitActivity = () => {
     }));
 };
 
+const createProfileSummary = (user: GitHubUser): string => {
+  return `
+- Bio: ${user.bio || 'Not provided'}
+- Company: ${user.company || 'Not provided'}
+- Location: ${user.location || 'Not provided'}
+- Blog/Website: ${user.blog || 'Not provided'}
+- Followers: ${user.followers}
+- Following: ${user.following}
+- Public Repos: ${user.public_repos}
+  `.trim();
+}
+
+const createRepoSummary = (repos: Repo[]): string => {
+  return repos
+    .slice(0, 5) // Analyze top 5 repos
+    .map(repo => `
+- Repo: ${repo.name}
+  - Stars: ${repo.stargazers_count}
+  - Forks: ${repo.forks_count}
+  - Language: ${repo.language || 'Not specified'}
+  - Description: ${repo.description || 'Not provided'}
+    `.trim())
+    .join('\n');
+}
+
+
 export function GithubAnalyzer() {
   const [username, setUsername] = useState("");
   const [loading, setLoading] = useState(false);
@@ -57,7 +80,7 @@ export function GithubAnalyzer() {
 
     try {
       const userRes = await fetch(`https://api.github.com/users/${userToAnalyze}`);
-      const repoRes = await fetch(`https://api.github.com/users/${userToAnalyze}/repos?sort=updated&per_page=100`);
+      const repoRes = await fetch(`https://api.github.com/users/${userToAnalyze}/repos?sort=pushed&per_page=100`);
 
       if (userRes.status === 404) {
         toast({
@@ -80,8 +103,8 @@ export function GithubAnalyzer() {
       // Call Genkit AI flows
       const insightsResult = await generateProfileInsights({
         username: user.login,
-        commitHistory: mockCommitHistory,
-        contributionDetails: mockContributionDetails,
+        profileSummary: createProfileSummary(user),
+        repoSummary: createRepoSummary(repos),
       });
 
       const tipsResult = await generatePersonalizedTips({
@@ -93,6 +116,7 @@ export function GithubAnalyzer() {
         user,
         repos,
         insights: insightsResult.insights,
+        ratings: insightsResult.ratings,
         tips: tipsResult.tips,
         languageData: processLanguageData(repos),
         commitActivity: generateCommitActivity(),
@@ -123,7 +147,7 @@ export function GithubAnalyzer() {
         </p>
       </div>
 
-      <Card className="shadow-xl">
+      <Card className="shadow-xl bg-card/80 backdrop-blur-sm">
         <CardHeader>
           <CardTitle>Analyze a Profile</CardTitle>
           <CardDescription>No login required. Just enter a username and see the magic.</CardDescription>

@@ -17,8 +17,18 @@ export interface GitHubUser {
 
 export interface Repo {
   name: string;
+  description: string | null;
   language: string | null;
   stargazers_count: number;
+  forks_count: number;
+  html_url: string;
+}
+
+export interface Rating {
+  category: string;
+  score: number;
+  pros: string[];
+  cons: string[];
 }
 
 export interface AnalysisResult {
@@ -28,4 +38,5 @@ export interface AnalysisResult {
   tips: string[];
   languageData: { name: string; value: number }[];
   commitActivity: { name: string; total: number }[];
+  ratings: Rating[];
 }

@@ -1,8 +1,7 @@
-// src/ai/flows/generate-profile-insights.ts
 'use server';
 
 /**
- * @fileOverview Generates insights about a GitHub profile based on the user's commit history and contributions.
+ * @fileOverview Generates insights and ratings for a GitHub profile.
  *
  * - generateProfileInsights - A function that generates insights about a GitHub profile.
  * - GenerateProfileInsightsInput - The input type for the generateProfileInsights function.
@@ -14,57 +13,82 @@ import {z} from 'genkit';
 
 const GenerateProfileInsightsInputSchema = z.object({
   username: z.string().describe('The GitHub username to analyze.'),
-  commitHistory: z.string().describe('The commit history of the user.'),
-  contributionDetails: z.string().describe('Details of the contributions of the user.')
+  profileSummary: z
+    .string()
+    .describe(
+      'A summary of the user profile including bio, location, company, and other details.'
+    ),
+  repoSummary: z
+    .string()
+    .describe(
+      'A summary of the user\'s most popular repositories, including names, descriptions, languages, and star counts.'
+    ),
 });
 
-export type GenerateProfileInsightsInput = z.infer<typeof GenerateProfileInsightsInputSchema>;
+export type GenerateProfileInsightsInput = z.infer<
+  typeof GenerateProfileInsightsInputSchema
+>;
 
 const GenerateProfileInsightsOutputSchema = z.object({
-  insights: z.string().describe('AI-generated insights about the GitHub profile.'),
+  insights: z
+    .string()
+    .describe('AI-generated insights about the GitHub profile.'),
+  ratings: z
+    .array(
+      z.object({
+        category: z
+          .string()
+          .describe(
+            'The category of the rating (e.g., Profile Completeness, Repository Quality).'
+          ),
+        score: z
+          .number()
+          .min(0)
+          .max(10)
+          .describe('A score for the category from 0 to 10.'),
+        pros: z
+          .array(z.string())
+          .describe('A list of positive points for this category.'),
+        cons: z
+          .array(z.string())
+          .describe('A list of areas for improvement in this category.'),
+      })
+    )
+    .describe('A list of AI-generated ratings across different categories.'),
 });
 
-export type GenerateProfileInsightsOutput = z.infer<typeof GenerateProfileInsightsOutputSchema>;
+export type GenerateProfileInsightsOutput = z.infer<
+  typeof GenerateProfileInsightsOutputSchema
+>;
 
-
-export async function generateProfileInsights(input: GenerateProfileInsightsInput): Promise<GenerateProfileInsightsOutput> {
+export async function generateProfileInsights(
+  input: GenerateProfileInsightsInput
+): Promise<GenerateProfileInsightsOutput> {
   return generateProfileInsightsFlow(input);
 }
 
-
-const findNotablePatterns = ai.defineTool({
-  name: 'findNotablePatterns',
-  description: 'Finds notable patterns in the user\'s commit history and contributions.',
-  inputSchema: z.object({
-    commitHistory: z.string().describe('The commit history of the user.'),
-    contributionDetails: z.string().describe('Details of the contributions of the user.')
-  }),
-  outputSchema: z.string(),
-},
-async (input) => {
-  // Placeholder implementation for finding notable patterns.
-  // In a real application, this would involve analyzing the commit history and contributions
-  // to identify patterns such as frequent contributions to certain projects, consistent coding style, etc.
-  return `Identified patterns in commit history and contributions for user: ${input.commitHistory} ${input.contributionDetails}`;
-}
-);
-
 const profileInsightsPrompt = ai.definePrompt({
   name: 'profileInsightsPrompt',
-  tools: [findNotablePatterns],
   input: {schema: GenerateProfileInsightsInputSchema},
   output: {schema: GenerateProfileInsightsOutputSchema},
-  prompt: `You are an AI expert in understanding Github profiles.
+  prompt: `You are an expert GitHub profile analyzer and career coach.
+  Your task is to provide a detailed analysis of a GitHub user's profile, offering both a qualitative summary and quantitative ratings.
 
-  Analyze the provided GitHub profile information and generate insights about the user's strengths and areas for improvement.
-  Use the findNotablePatterns tool to identify patterns in commit history and contributions, then synthesize these findings into profile insights.
-  Use clear and concise language.
+  Analyze the provided GitHub profile information:
+  - GitHub Username: {{{username}}}
+  - Profile Summary: {{{profileSummary}}}
+  - Repository Summary: {{{repoSummary}}}
 
-  GitHub Username: {{{username}}}
-  Commit History: {{{commitHistory}}}
-  Contribution Details: {{{contributionDetails}}}
+  **Instructions:**
+  1.  **Generate Insights:** Based on all the provided information, write a concise, insightful paragraph (3-4 sentences) summarizing the user's strengths, potential areas for growth, and overall impression. Focus on their public presence and development habits.
+  2.  **Generate Ratings:** Rate the user on a scale of 0 to 10 in the following categories. For each category, provide 1-2 "pros" (things they are doing well) and 1-2 "cons" (areas for improvement).
 
-  Insights:`, 
+      *   **Profile Completeness:** How well-filled is their profile? (Name, bio, photo, location, links). A good bio and links are key.
+      *   **Repository Quality:** How good are their top repositories? (Do they have READMEs, descriptions, licenses? Are they well-maintained?). A repository without a description is a major negative.
+      *   **Community Engagement:** How active are they in the community? (Based on follower count, contributions to other projects if mentioned, etc.).
+
+  Your response must be structured according to the output schema.
+  `,
 });
 
 const generateProfileInsightsFlow = ai.defineFlow(
