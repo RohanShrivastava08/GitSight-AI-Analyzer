@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { ContributionGraph } from "./contribution-graph";
-import { Users, Building, MapPin, Link as LinkIcon, CheckCircle, XCircle, TrendingUp, BrainCircuit, GitBranch, ChevronsRight, Lightbulb, Code, GitCommit, AlertTriangle, MessageSquareQuote } from "lucide-react";
+import { Users, Building, MapPin, Link as LinkIcon, CheckCircle, XCircle, TrendingUp, BrainCircuit, GitBranch, ChevronsRight, Lightbulb, Code, GitCommit, AlertTriangle, MessageSquareQuote, ThumbsUp } from "lucide-react";
 import { Area, AreaChart, Bar, BarChart as BarChartRecharts, CartesianGrid, XAxis, YAxis } from "recharts";
 import type { ChartConfig } from "@/components/ui/chart";
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
@@ -68,7 +68,7 @@ function ContributionActivity({ username, created_at }: { username: string, crea
     }, [selectedYear, username, toast]);
     
     return (
-        <Card className="shadow-lg bg-card/50 backdrop-blur-xl border-border">
+        <Card className="shadow-lg bg-card/50 backdrop-blur-xl border-border animate-fade-in" style={{animationDelay: '300ms', animationFillMode: 'both'}}>
             <CardHeader className="flex-row items-center justify-between">
                 <div>
                     <CardTitle className="font-headline flex items-center gap-2 text-xl"><GitBranch className="text-primary"/> Contribution Activity</CardTitle>
@@ -109,11 +109,11 @@ function ContributionActivity({ username, created_at }: { username: string, crea
 
 export function Dashboard({ result }: { result: AnalysisResult }) {
   return (
-    <div className="container mx-auto max-w-7xl p-4 sm:p-6 lg:p-8 animate-fade-in mt-6">
+    <div className="container mx-auto max-w-screen-xl p-4 sm:p-6 lg:p-8 mt-6">
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
         {/* Left Sidebar */}
         <div className="lg:col-span-1 space-y-6">
-          <div className="flex flex-col items-center lg:items-start">
+          <div className="flex flex-col items-center lg:items-start animate-fade-in" style={{animationDelay: '0ms', animationFillMode: 'both'}}>
             <Avatar className="h-40 w-40 border-4 border-border shadow-lg">
               <AvatarImage src={result.user.avatar_url} alt={result.user.name} />
               <AvatarFallback>{result.user.name ? result.user.name.charAt(0) : result.user.login.charAt(0)}</AvatarFallback>
@@ -129,7 +129,7 @@ export function Dashboard({ result }: { result: AnalysisResult }) {
                 <a href={result.user.html_url} target="_blank" rel="noopener noreferrer">View on GitHub</a>
             </Button>
           </div>
-          <div className="space-y-2 text-sm">
+          <div className="space-y-2 text-sm animate-fade-in" style={{animationDelay: '100ms', animationFillMode: 'both'}}>
             <div className="flex items-center gap-2 text-muted-foreground">
                 <Users className="w-4 h-4" />
                 <span className="font-bold text-foreground">{result.user.followers}</span> followers · <span className="font-bold text-foreground">{result.user.following}</span> following
@@ -142,25 +142,46 @@ export function Dashboard({ result }: { result: AnalysisResult }) {
 
         {/* Main Content */}
         <div className="lg:col-span-3 space-y-8">
-          <Card className="shadow-lg bg-card/50 backdrop-blur-xl border-border">
+          <Card className="shadow-lg bg-card/50 backdrop-blur-xl border-border animate-fade-in" style={{animationDelay: '200ms', animationFillMode: 'both'}}>
             <CardHeader>
               <CardTitle className="flex items-center gap-2 font-headline text-xl"><BrainCircuit className="text-primary"/> AI-Powered Insights</CardTitle>
+              <CardDescription>A high-level summary of the profile's strengths and areas for improvement.</CardDescription>
             </CardHeader>
-            <CardContent>
-              <ul className="space-y-3">
-                {result.insights.map((insight, index) => (
-                  <li key={index} className="flex items-start gap-3 text-base text-foreground/90 leading-relaxed">
-                     <CheckCircle className="w-5 h-5 mt-1 text-primary flex-shrink-0" />
-                     <span>{insight}</span>
-                  </li>
-                ))}
-              </ul>
+            <CardContent className="grid md:grid-cols-2 gap-6">
+               <div>
+                    <h3 className="font-semibold flex items-center gap-2 mb-3 text-base">
+                        <ThumbsUp className="w-5 h-5 text-green-500" />
+                        Profile Strengths
+                    </h3>
+                    <ul className="space-y-3">
+                        {result.profileStrengths.map((point, index) => (
+                        <li key={index} className="flex items-start gap-3 text-sm text-foreground/90 leading-relaxed">
+                            <CheckCircle className="w-4 h-4 mt-1 text-green-500 flex-shrink-0" />
+                            <span>{point}</span>
+                        </li>
+                        ))}
+                    </ul>
+               </div>
+                <div>
+                    <h3 className="font-semibold flex items-center gap-2 mb-3 text-base">
+                        <TrendingUp className="w-5 h-5 text-amber-500" />
+                        Areas for Improvement
+                    </h3>
+                    <ul className="space-y-3">
+                        {result.areasForImprovement.map((point, index) => (
+                        <li key={index} className="flex items-start gap-3 text-sm text-foreground/90 leading-relaxed">
+                            <ChevronsRight className="w-4 h-4 mt-1 text-amber-500 flex-shrink-0" />
+                            <span>{point}</span>
+                        </li>
+                        ))}
+                    </ul>
+                </div>
             </CardContent>
           </Card>
           
           <ContributionActivity username={result.user.login} created_at={result.user.created_at} />
           
-          <div>
+          <div className="animate-fade-in" style={{animationDelay: '400ms', animationFillMode: 'both'}}>
             <h2 className="text-2xl font-bold font-headline mb-4 flex items-center gap-3"><TrendingUp className="text-primary"/> AI Profile Ratings</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {result.ratings.map((rating, index) => (
@@ -193,7 +214,7 @@ export function Dashboard({ result }: { result: AnalysisResult }) {
             </div>
           </div>
           
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 animate-fade-in" style={{animationDelay: '500ms', animationFillMode: 'both'}}>
              <Card className="shadow-lg bg-card/50 backdrop-blur-xl">
                 <CardHeader>
                   <CardTitle className="font-headline flex items-center gap-2 text-xl"><Code className="text-primary"/> Language Distribution</CardTitle>
@@ -260,13 +281,15 @@ export function Dashboard({ result }: { result: AnalysisResult }) {
           </div>
           
           {result.pinnedRepos.length > 0 && (
-            <PinnedRepos 
-                repos={result.pinnedRepos} 
-                analysis={result.pinnedRepoAnalysis} 
-            />
+            <div className="animate-fade-in" style={{animationDelay: '600ms', animationFillMode: 'both'}}>
+                <PinnedRepos 
+                    repos={result.pinnedRepos} 
+                    analysis={result.pinnedRepoAnalysis} 
+                />
+            </div>
            )}
 
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 animate-fade-in" style={{animationDelay: '700ms', animationFillMode: 'both'}}>
             <Card className="shadow-lg bg-card/50 backdrop-blur-xl">
               <CardHeader>
                 <CardTitle className="font-headline flex items-center gap-2 text-xl"><Lightbulb className="text-primary"/> Personalized Tips</CardTitle>

@@ -30,10 +30,15 @@ export type GenerateProfileInsightsInput = z.infer<
 >;
 
 const GenerateProfileInsightsOutputSchema = z.object({
-  insights: z
+  profileStrengths: z
     .array(z.string())
     .describe(
-      'A list of 3-5 key, actionable insights about the GitHub profile, formatted as individual points.'
+      'A list of 2-3 key strengths of the GitHub profile, focusing on what they are doing well.'
+    ),
+  areasForImprovement: z
+    .array(z.string())
+    .describe(
+      'A list of 2-3 actionable areas for improvement for the profile.'
     ),
   ratings: z
     .array(
@@ -82,8 +87,9 @@ const profileInsightsPrompt = ai.definePrompt({
   - Repository Summary: {{{repoSummary}}}
 
   **Instructions:**
-  1.  **Generate Insights:** Based on all the provided information, write a list of 3-5 concise, insightful bullet points summarizing the user's strengths, potential areas for growth, and overall impression. Each point should be a separate string in the array. Focus on their public presence and development habits.
-  2.  **Generate Ratings:** Rate the user on a scale of 0 to 10 in the following categories. For each category, provide 1-2 "pros" (things they are doing well) and 1-2 "cons" (areas for improvement).
+  1.  **Profile Strengths:** Based on all the provided information, identify 2-3 key strengths. What is the user doing well?
+  2.  **Areas for Improvement:** Identify 2-3 actionable areas for improvement. What could they focus on to make their profile more effective?
+  3.  **Generate Ratings:** Rate the user on a scale of 0 to 10 in the following categories. For each category, provide 1-2 "pros" (things they are doing well) and 1-2 "cons" (areas for improvement).
 
       *   **Profile Completeness:** How well-filled is their profile? (Name, bio, photo, location, links). A good bio and links are key.
       *   **Repository Quality:** How good are their top repositories? (Do they have READMEs, descriptions, licenses? Are they well-maintained?). A repository without a description is a major negative.

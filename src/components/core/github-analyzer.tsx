@@ -115,8 +115,9 @@ export function GithubAnalyzer() {
 
       const [insightsResult, pinnedRepoAnalysis] = await Promise.all([insightsPromise, pinnedRepoAnalysisPromise]);
 
+      const profileAnalysisSummary = `Strengths:\n- ${insightsResult.profileStrengths.join('\n- ')}\n\nAreas for Improvement:\n- ${insightsResult.areasForImprovement.join('\n- ')}`;
       const tipsResult = await generatePersonalizedTips({
-        profileAnalysis: insightsResult.insights.join("\n- "),
+        profileAnalysis: profileAnalysisSummary,
         userGoals: "Improve open source presence, contribution consistency, and collaboration skills.",
       });
 
@@ -124,7 +125,8 @@ export function GithubAnalyzer() {
         user,
         repos,
         pinnedRepos,
-        insights: insightsResult.insights,
+        profileStrengths: insightsResult.profileStrengths,
+        areasForImprovement: insightsResult.areasForImprovement,
         ratings: insightsResult.ratings,
         tips: tipsResult.tips,
         contributionStrategies: tipsResult.contributionStrategies,
@@ -189,20 +191,29 @@ export function GithubAnalyzer() {
       </section>
       
       {loading && (
-        <div className="container mx-auto max-w-7xl p-4 sm:p-6 lg:p-8 mt-6">
+        <div className="container mx-auto max-w-screen-xl p-4 sm:p-6 lg:p-8 mt-6">
             <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
                 <div className="lg:col-span-1 space-y-6 flex flex-col items-center lg:items-start">
                   <Skeleton className="h-40 w-40 rounded-full" />
-                  <div className="space-y-3 w-full">
+                  <div className="space-y-3 w-full mt-4">
                     <Skeleton className="h-8 w-3/4" />
                     <Skeleton className="h-6 w-1/2" />
-                    <Skeleton className="h-12 w-full" />
                   </div>
+                  <Skeleton className="h-11 w-full mt-4" />
+                   <div className="space-y-2 w-full mt-4">
+                        <Skeleton className="h-5 w-5/6" />
+                        <Skeleton className="h-5 w-4/6" />
+                        <Skeleton className="h-5 w-3/6" />
+                    </div>
                 </div>
                 <div className="lg:col-span-3 space-y-8">
-                    <Skeleton className="h-24 w-full rounded-lg" />
                     <Skeleton className="h-40 w-full rounded-lg" />
-                    <Skeleton className="h-40 w-full rounded-lg" />
+                    <Skeleton className="h-48 w-full rounded-lg" />
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <Skeleton className="h-32 w-full rounded-lg" />
+                        <Skeleton className="h-32 w-full rounded-lg" />
+                        <Skeleton className="h-32 w-full rounded-lg" />
+                    </div>
                 </div>
             </div>
         </div>

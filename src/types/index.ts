@@ -60,7 +60,8 @@ export interface AnalysisResult {
   user: GitHubUser;
   repos: Repo[];
   pinnedRepos: PinnedRepo[];
-  insights: string[];
+  profileStrengths: string[];
+  areasForImprovement: string[];
   tips: string[];
   contributionStrategies: string[];
   languageData: { name: string; value: number }[];
