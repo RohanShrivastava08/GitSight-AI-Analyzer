@@ -20,17 +20,20 @@ const mapContributionLevel = (level: string): 0 | 1 | 2 | 3 | 4 => {
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
   const username = searchParams.get('username');
+  const year = searchParams.get('year');
 
   if (!username) {
     return NextResponse.json({ error: 'Username is required' }, { status: 400 });
   }
 
+  if (!year) {
+    return NextResponse.json({ error: 'Year is required' }, { status: 400 });
+  }
+
   const token = process.env.GITHUB_TOKEN;
   if (!token) {
-    console.error("GITHUB_TOKEN is not set. Returning empty contribution data.");
-    // To avoid breaking the UI, we can return an empty array.
-    // The UI will show an empty contribution graph.
-    return NextResponse.json([]);
+    console.error("GITHUB_TOKEN is not set.");
+    return NextResponse.json({ error: 'Server configuration error: GITHUB_TOKEN is not set. Please add it to your .env file.' }, { status: 500 });
   }
 
   const headers = {
@@ -38,11 +41,14 @@ export async function GET(request: Request) {
     'Content-Type': 'application/json',
   };
 
+  const from = new Date(`${year}-01-01T00:00:00Z`);
+  const to = new Date(`${year}-12-31T23:59:59Z`);
+
   const body = {
     query: `
-      query($username: String!) {
+      query($username: String!, $from: DateTime!, $to: DateTime!) {
         user(login: $username) {
-          contributionsCollection {
+          contributionsCollection(from: $from, to: $to) {
             contributionCalendar {
               weeks {
                 contributionDays {
@@ -56,7 +62,7 @@ export async function GET(request: Request) {
         }
       }
     `,
-    variables: { username },
+    variables: { username, from, to },
   };
 
   try {

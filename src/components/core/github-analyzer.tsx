@@ -8,7 +8,7 @@ import { Github, Loader2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { generateProfileInsights } from "@/ai/flows/generate-profile-insights";
 import { generatePersonalizedTips } from "@/ai/flows/generate-personalized-tips";
-import type { AnalysisResult, Repo, GitHubUser, ContributionData } from "@/types";
+import type { AnalysisResult, Repo, GitHubUser } from "@/types";
 import { Dashboard } from "./dashboard";
 import { Skeleton } from "../ui/skeleton";
 import { DemoProfiles } from "../sections/demo-profiles";
@@ -100,9 +100,6 @@ export function GithubAnalyzer() {
       const user = await userRes.json();
       const repos: Repo[] = await repoRes.json();
       
-      const contributionRes = await fetch(`/api/github-contributions?username=${userToAnalyze}`);
-      const contributionData: ContributionData[] = contributionRes.ok ? await contributionRes.json() : [];
-
       // Call Genkit AI flows
       const insightsResult = await generateProfileInsights({
         username: user.login,
@@ -124,7 +121,6 @@ export function GithubAnalyzer() {
         contributionStrategies: tipsResult.contributionStrategies,
         languageData: processLanguageData(repos),
         commitActivity: generateCommitActivity(),
-        contributionData,
       });
 
     } catch (error) {

@@ -11,29 +11,29 @@ const contributionColors = [
   "bg-green-700 dark:bg-green-500",
 ];
 
-export function ContributionGraph({ data }: { data: ContributionData[] }) {
+export function ContributionGraph({ data, year }: { data: ContributionData[], year: number }) {
   const contributionsMap = new Map(data.map(c => [c.date, c]));
 
-  const today = new Date();
-  const yearAgo = new Date(new Date().setDate(today.getDate() - 365));
+  const yearStartDate = new Date(year, 0, 1);
+  const isLeap = (year % 4 === 0 && year % 100 !== 0) || year % 400 === 0;
+  const totalDays = isLeap ? 366 : 365;
 
-  const days = Array.from({ length: 366 }).map((_, i) => {
-    const date = new Date(yearAgo);
-    date.setDate(yearAgo.getDate() + i);
+  const days = Array.from({ length: totalDays }).map((_, i) => {
+    const date = new Date(yearStartDate);
+    date.setUTCDate(date.getUTCDate() + i);
     const dateString = date.toISOString().split('T')[0];
     return contributionsMap.get(dateString) || { date: dateString, count: 0, level: 0 };
   });
 
-  const firstDayOffset = yearAgo.getDay();
+  const firstDayOffset = yearStartDate.getUTCDay();
 
   const monthLabels = days
     .map((day, index) => ({ day, index }))
-    .filter(d => new Date(d.day.date).getDate() === 1)
+    .filter(d => new Date(d.day.date).getUTCDate() === 1)
     .map(d => ({
-      month: new Date(d.day.date).toLocaleString('default', { month: 'short' }),
+      month: new Date(d.day.date).toLocaleString('default', { month: 'short', timeZone: 'UTC' }),
       weekIndex: Math.floor((d.index + firstDayOffset) / 7),
     }))
-    .filter((item, index, self) => self.findIndex(t => t.month === item.month && t.weekIndex === item.weekIndex) === index)
     .reduce((acc, { month, weekIndex }) => {
        if (!acc.find(m => m.weekIndex === weekIndex)) {
           acc.push({ month, weekIndex });
@@ -47,7 +47,7 @@ export function ContributionGraph({ data }: { data: ContributionData[] }) {
       <div className="overflow-x-auto p-1">
         <div className="relative">
           <div className="flex text-xs text-muted-foreground mb-2 pl-10">
-            {monthLabels.map(({ month, weekIndex }, i) => (
+            {monthLabels.map(({ month, weekIndex }) => (
               <div
                 key={month + weekIndex}
                 className="absolute"

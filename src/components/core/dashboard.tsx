@@ -1,15 +1,19 @@
 "use client";
 
-import type { AnalysisResult } from "@/types";
+import type { AnalysisResult, ContributionData } from "@/types";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { ContributionGraph } from "./contribution-graph";
-import { Users, Building, MapPin, Link as LinkIcon, CheckCircle, XCircle, TrendingUp, BrainCircuit, GitBranch, ChevronsRight, Lightbulb, BarChart, GitCommit, Code } from "lucide-react";
+import { Users, Building, MapPin, Link as LinkIcon, CheckCircle, XCircle, TrendingUp, BrainCircuit, GitBranch, ChevronsRight, Lightbulb, BarChart, GitCommit, Code, AlertTriangle } from "lucide-react";
 import { Area, AreaChart, Bar, BarChart as BarChartRecharts, CartesianGrid, XAxis, YAxis } from "recharts";
 import type { ChartConfig } from "@/components/ui/chart";
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { useEffect, useState } from "react";
+import { useToast } from "@/hooks/use-toast";
+import { Skeleton } from "../ui/skeleton";
 
 
 const languageChartConfig = {
@@ -25,6 +29,82 @@ const commitChartConfig = {
     color: "hsl(var(--chart-1))",
   },
 } satisfies ChartConfig
+
+function ContributionActivity({ username, created_at }: { username: string, created_at: string }) {
+    const currentYear = new Date().getFullYear();
+    const joinYear = new Date(created_at).getFullYear();
+    const years = Array.from({ length: currentYear - joinYear + 1 }, (_, i) => currentYear - i);
+
+    const [selectedYear, setSelectedYear] = useState(currentYear);
+    const [contributionData, setContributionData] = useState<ContributionData[]>([]);
+    const [isLoading, setIsLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
+    const { toast } = useToast();
+
+    useEffect(() => {
+        const fetchContributions = async () => {
+            setIsLoading(true);
+            setError(null);
+            try {
+                const res = await fetch(`/api/github-contributions?username=${username}&year=${selectedYear}`);
+                const data = await res.json();
+                if (!res.ok) {
+                    throw new Error(data.error || "Failed to fetch contribution data.");
+                }
+                setContributionData(data);
+            } catch (e: any) {
+                setError(e.message);
+                toast({
+                    title: "Could Not Load Contributions",
+                    description: e.message,
+                    variant: "destructive"
+                });
+            } finally {
+                setIsLoading(false);
+            }
+        };
+        fetchContributions();
+    }, [selectedYear, username, toast]);
+    
+    return (
+        <Card className="shadow-lg bg-card/50 backdrop-blur-xl border-border">
+            <CardHeader className="flex-row items-center justify-between">
+                <div>
+                    <CardTitle className="font-headline flex items-center gap-2 text-xl"><GitBranch className="text-primary"/> Contribution Activity</CardTitle>
+                    <CardDescription>Contribution activity for {selectedYear}.</CardDescription>
+                </div>
+                <Select value={String(selectedYear)} onValueChange={(value) => setSelectedYear(Number(value))}>
+                    <SelectTrigger className="w-[120px]">
+                        <SelectValue placeholder="Select year" />
+                    </SelectTrigger>
+                    <SelectContent>
+                        {years.map(year => (
+                            <SelectItem key={year} value={String(year)}>{year}</SelectItem>
+                        ))}
+                    </SelectContent>
+                </Select>
+            </CardHeader>
+            <CardContent>
+                {isLoading ? (
+                    <div className="space-y-2 p-1">
+                        <Skeleton className="h-8 w-1/3" />
+                        <Skeleton className="h-32 w-full" />
+                        <Skeleton className="h-4 w-1/4 self-end" />
+                    </div>
+                ) : error ? (
+                    <div className="flex flex-col items-center justify-center text-center p-6 bg-muted/50 rounded-lg">
+                        <AlertTriangle className="w-10 h-10 text-destructive mb-4" />
+                        <h3 className="text-lg font-semibold text-destructive">Failed to Load Contributions</h3>
+                        <p className="text-sm text-muted-foreground mt-1 max-w-sm">{error}</p>
+                        <p className="text-xs text-muted-foreground mt-4">Please ensure your GITHUB_TOKEN is correctly set in the .env file and has the 'read:user' scope.</p>
+                    </div>
+                ) : (
+                    <ContributionGraph data={contributionData} year={selectedYear} />
+                )}
+            </CardContent>
+        </Card>
+    )
+}
 
 
 export function Dashboard({ result }: { result: AnalysisResult }) {
@@ -78,15 +158,7 @@ export function Dashboard({ result }: { result: AnalysisResult }) {
             </CardContent>
           </Card>
           
-          <Card className="shadow-lg bg-card/50 backdrop-blur-xl border-border">
-            <CardHeader>
-                <CardTitle className="font-headline flex items-center gap-2 text-xl"><GitBranch className="text-primary"/> Contribution Activity</CardTitle>
-                <CardDescription>A summary of contribution activity over the last year.</CardDescription>
-            </CardHeader>
-            <CardContent>
-                <ContributionGraph data={result.contributionData} />
-            </CardContent>
-          </Card>
+          <ContributionActivity username={result.user.login} created_at={result.user.created_at} />
           
           <div>
             <h2 className="text-2xl font-bold font-headline mb-4 flex items-center gap-3"><TrendingUp className="text-primary"/> AI Profile Ratings</h2>

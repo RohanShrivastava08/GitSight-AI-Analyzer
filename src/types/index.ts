@@ -46,5 +46,4 @@ export interface AnalysisResult {
   languageData: { name: string; value: number }[];
   commitActivity: { name: string; total: number }[];
   ratings: Rating[];
-  contributionData: ContributionData[];
 }
