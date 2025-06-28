@@ -1,7 +1,7 @@
 # GitSight: AI-Powered GitHub Profile Analysis
 
 <div align="center">
-  <img src="https://placehold.co/1200x630.png" alt="GitSight Application Screenshot" data-ai-hint="app screenshot">
+  <img src="https://images.unsplash.com/photo-1647166545674-ce28ce93bdca?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NHx8Z2l0aHVifGVufDB8fDB8fHww" alt="GitSight Application Screenshot">
   <br/>
   <p>
     <strong>GitSight is a web application that provides deep, AI-powered analysis of any public GitHub profile.</strong>
