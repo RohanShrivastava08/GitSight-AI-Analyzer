@@ -16,7 +16,7 @@ export function DemoAnalysis() {
                     </p>
                 </div>
 
-                <div className="relative rounded-xl bg-background p-4 sm:p-6 lg:p-8 border border-border shadow-2xl shadow-primary/10 overflow-hidden">
+                <div className="relative rounded-xl bg-card p-4 sm:p-6 lg:p-8 border shadow-lg overflow-hidden">
                     <div className="grid grid-cols-1 lg:grid-cols-4 gap-8 relative">
                         {/* Left Sidebar */}
                         <div className="lg:col-span-1 space-y-4 flex flex-col items-center lg:items-start text-center lg:text-left">
@@ -39,7 +39,7 @@ export function DemoAnalysis() {
 
                         {/* Main Content */}
                         <div className="lg:col-span-3 space-y-6">
-                             <Card className="shadow-lg bg-card/50 backdrop-blur-xl border-border">
+                             <Card className="shadow-sm bg-background border">
                                 <CardHeader>
                                     <CardTitle className="font-headline text-xl">AI-Powered Insights</CardTitle>
                                 </CardHeader>
@@ -80,7 +80,7 @@ export function DemoAnalysis() {
                             </Card>
 
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                <Card className="shadow-md bg-card/50 backdrop-blur-xl border-border/80">
+                                <Card className="shadow-sm bg-background border">
                                     <CardHeader className="flex flex-row items-center justify-between pb-2">
                                         <CardTitle className="text-base font-semibold">Repository Quality</CardTitle>
                                         <span className="text-xl font-bold text-primary">5/10</span>
@@ -99,7 +99,7 @@ export function DemoAnalysis() {
                                         </ul>
                                     </CardContent>
                                 </Card>
-                                <Card className="shadow-lg bg-card/50 backdrop-blur-xl">
+                                <Card className="shadow-sm bg-background border">
                                     <CardHeader>
                                         <CardTitle className="font-headline flex items-center gap-2 text-lg"><Lightbulb className="text-primary"/> AI-Generated Tip</CardTitle>
                                     </CardHeader>

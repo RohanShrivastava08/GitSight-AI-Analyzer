@@ -68,7 +68,7 @@ function ContributionActivity({ username, created_at }: { username: string, crea
     }, [selectedYear, username, toast]);
     
     return (
-        <Card className="shadow-lg bg-card/50 backdrop-blur-xl border-border animate-fade-in" style={{animationDelay: '300ms', animationFillMode: 'both'}}>
+        <Card className="shadow-sm bg-card border animate-fade-in" style={{animationDelay: '300ms', animationFillMode: 'both'}}>
             <CardHeader className="flex-row items-center justify-between">
                 <div>
                     <CardTitle className="font-headline flex items-center gap-2 text-xl"><GitBranch className="text-primary"/> Contribution Activity</CardTitle>
@@ -142,7 +142,7 @@ export function Dashboard({ result }: { result: AnalysisResult }) {
 
         {/* Main Content */}
         <div className="lg:col-span-3 space-y-8">
-          <Card className="shadow-lg bg-card/50 backdrop-blur-xl border-border animate-fade-in" style={{animationDelay: '200ms', animationFillMode: 'both'}}>
+          <Card className="shadow-sm bg-card border animate-fade-in" style={{animationDelay: '200ms', animationFillMode: 'both'}}>
             <CardHeader>
               <CardTitle className="flex items-center gap-2 font-headline text-xl"><BrainCircuit className="text-primary"/> AI-Powered Insights</CardTitle>
               <CardDescription>A high-level summary of the profile's strengths and areas for improvement.</CardDescription>
@@ -185,7 +185,7 @@ export function Dashboard({ result }: { result: AnalysisResult }) {
             <h2 className="text-2xl font-bold font-headline mb-4 flex items-center gap-3"><TrendingUp className="text-primary"/> AI Profile Ratings</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {result.ratings.map((rating, index) => (
-                <Card key={index} className="shadow-md bg-card/50 backdrop-blur-xl border-border/80">
+                <Card key={index} className="shadow-sm bg-card border">
                   <CardHeader className="flex flex-row items-center justify-between pb-2">
                     <CardTitle className="text-base font-semibold">{rating.category}</CardTitle>
                     <span className="text-xl font-bold text-primary">{rating.score}/10</span>
@@ -215,7 +215,7 @@ export function Dashboard({ result }: { result: AnalysisResult }) {
           </div>
           
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 animate-fade-in" style={{animationDelay: '500ms', animationFillMode: 'both'}}>
-             <Card className="shadow-lg bg-card/50 backdrop-blur-xl">
+             <Card className="shadow-sm bg-card border">
                 <CardHeader>
                   <CardTitle className="font-headline flex items-center gap-2 text-xl"><Code className="text-primary"/> Language Distribution</CardTitle>
                   <CardDescription>Top languages used in public repositories.</CardDescription>
@@ -244,7 +244,7 @@ export function Dashboard({ result }: { result: AnalysisResult }) {
                 </CardContent>
               </Card>
 
-              <Card className="shadow-lg bg-card/50 backdrop-blur-xl">
+              <Card className="shadow-sm bg-card border">
                   <CardHeader>
                     <CardTitle className="font-headline flex items-center gap-2 text-xl"><GitCommit className="text-primary"/> Commit Activity</CardTitle>
                     <CardDescription>Total commits in the last 6 months.</CardDescription>
@@ -290,7 +290,7 @@ export function Dashboard({ result }: { result: AnalysisResult }) {
            )}
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 animate-fade-in" style={{animationDelay: '700ms', animationFillMode: 'both'}}>
-            <Card className="shadow-lg bg-card/50 backdrop-blur-xl">
+            <Card className="shadow-sm bg-card border">
               <CardHeader>
                 <CardTitle className="font-headline flex items-center gap-2 text-xl"><Lightbulb className="text-primary"/> Personalized Tips</CardTitle>
                 <CardDescription>Actionable advice to improve this profile.</CardDescription>
@@ -308,7 +308,7 @@ export function Dashboard({ result }: { result: AnalysisResult }) {
                 </ul>
               </CardContent>
             </Card>
-             <Card className="shadow-lg bg-card/50 backdrop-blur-xl">
+             <Card className="shadow-sm bg-card border">
                 <CardHeader>
                     <CardTitle className="font-headline flex items-center gap-2 text-xl"><TrendingUp className="text-primary"/> Contribution Strategies</CardTitle>
                     <CardDescription>General advice for consistency.</CardDescription>

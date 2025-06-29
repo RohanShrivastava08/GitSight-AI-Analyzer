@@ -16,7 +16,7 @@ export function PinnedRepos({ repos, analysis }: { repos: PinnedRepo[], analysis
         {repos.map((repo) => {
           const repoAnalysis = analysisMap.get(repo.name);
           return (
-            <Card key={repo.name} className="shadow-lg bg-card/50 backdrop-blur-xl border-border">
+            <Card key={repo.name} className="shadow-sm bg-card border">
               <CardHeader>
                 <div className="flex justify-between items-start">
                     <div>

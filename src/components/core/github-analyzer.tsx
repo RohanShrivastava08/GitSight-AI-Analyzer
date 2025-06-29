@@ -160,7 +160,7 @@ export function GithubAnalyzer() {
           </p>
         </div>
 
-        <Card className="shadow-lg bg-card/50 backdrop-blur-sm border-border">
+        <Card className="shadow-sm bg-card border">
           <CardContent className="p-6">
             <form
               onSubmit={(e) => {

@@ -8,7 +8,7 @@ body {
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
+    --background: 220 20% 97%; /* GitHub Light Background */
     --foreground: 224 71.4% 4.1%;
     --card: 0 0% 100%;
     --card-foreground: 224 71.4% 4.1%;
@@ -24,7 +24,7 @@ body {
     --accent-foreground: 220 14.3% 9.1%;
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 98%;
-    --border: 220 13% 85%;
+    --border: 215 15% 83%; /* GitHub Light Border */
     --input: 220 13% 91%;
     --ring: 142.1 76.2% 36.3%;
     --radius: 0.5rem;
@@ -51,7 +51,7 @@ body {
     --accent-foreground: 210 40% 98%;
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 210 40% 98%;
-    --border: 217.2 32.6% 22.5%;
+    --border: 217.2 32.6% 21%; /* GitHub Dark Border */
     --input: 217.2 32.6% 17.5%;
     --ring: 142.1 70.2% 45.3%;
     --chart-1: 220 70% 50%;
