@@ -10,7 +10,8 @@
 
 ---
 
-GitSight leverages the power of Google's Gemini through Genkit to offer nuanced insights, helping developers, recruiters, and managers quickly understand a GitHub profile's strengths, weaknesses, and overall technical narrative. No login required—just enter a username and get an instant, comprehensive report.
+- GitSight leverages the power of Google's Gemini through Genkit to offer nuanced insights, helping developers, recruiters, and managers quickly understand a GitHub profile's strengths, weaknesses, and overall technical narrative.
+- No login required—just enter a username and get an instant, comprehensive report.
 
 ## ✨ Key Features
 
