@@ -1,5 +1,11 @@
 # 🌟 🔍 GitSight – AI GitHub Profile Analyzer Powered by Gemini
 
+- GitSight is a powerful, full-stack generative AI web app that analyzes any public GitHub profile.
+  
+- It delivers a deep, structured report of technical strengths, gaps, contributions, and actionable improvements — all with just a username input.
+
+- Powered by Google Gemini via Firebase Genkit, GitSight delivers instant results inside a sleek and responsive interface using Next.js and ShadCN UI.
+
 <img width="1470" alt="Image" src="https://github.com/user-attachments/assets/30af78d6-5565-40dd-a085-b58322ae10d5" />
 
 <img width="1470" alt="Image" src="https://github.com/user-attachments/assets/e70e6316-ca60-4354-b19d-d4f8cb992d13" />
@@ -7,11 +13,6 @@
 <img width="1470" alt="Image" src="https://github.com/user-attachments/assets/2213b2b7-15f3-4454-bb3e-4302807ed613" />
 
 <img width="1470" alt="Image" src="https://github.com/user-attachments/assets/dd60c98b-ea16-4f80-9376-d9040a9fdd8c" />
-
-- GitSight is a powerful, full-stack generative AI web app that analyzes any public GitHub profile.
-- It delivers a deep, structured report of technical strengths, gaps, contributions, and actionable improvements — all with just a username input.
-
-- Powered by Google Gemini via Firebase Genkit, GitSight delivers instant results inside a sleek and responsive interface using Next.js and ShadCN UI.
 
 
 ## 📋 Table of Contents
